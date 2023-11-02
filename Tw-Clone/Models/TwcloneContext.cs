@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Tw_Clone.Models.TweetLike;
+using Tw_Clone.Models.TweetRepost;
 
 namespace Tw_Clone.Models;
 
@@ -8,6 +10,7 @@ public partial class TwcloneContext : DbContext
 {
     public TwcloneContext()
     {
+
     }
 
     public TwcloneContext(DbContextOptions<TwcloneContext> options)
@@ -15,17 +18,15 @@ public partial class TwcloneContext : DbContext
     {
     }
 
-    public virtual DbSet<Tweet> Tweets { get; set; }
+    public virtual DbSet<Tweet.Tweet> Tweets { get; set; }
 
     public virtual DbSet<Tweetslike> Tweetslikes { get; set; }
 
     public virtual DbSet<Tweetsrepost> Tweetsreposts { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<User.User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;database=twclone;uid=root;pwd=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.28-mysql"));
+  
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,7 +34,7 @@ public partial class TwcloneContext : DbContext
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Tweet>(entity =>
+        modelBuilder.Entity<Tweet.Tweet>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -71,11 +72,11 @@ public partial class TwcloneContext : DbContext
             entity.HasMany(d => d.TweetComments).WithMany(p => p.Tweeteds)
                 .UsingEntity<Dictionary<string, object>>(
                     "Comment",
-                    r => r.HasOne<Tweet>().WithMany()
+                    r => r.HasOne<Tweet.Tweet>().WithMany()
                         .HasForeignKey("TweetCommentId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("comments_ibfk_2"),
-                    l => l.HasOne<Tweet>().WithMany()
+                    l => l.HasOne<Tweet.Tweet>().WithMany()
                         .HasForeignKey("TweetedId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("comments_ibfk_1"),
@@ -93,11 +94,11 @@ public partial class TwcloneContext : DbContext
             entity.HasMany(d => d.Tweeteds).WithMany(p => p.TweetComments)
                 .UsingEntity<Dictionary<string, object>>(
                     "Comment",
-                    r => r.HasOne<Tweet>().WithMany()
+                    r => r.HasOne<Tweet.Tweet>().WithMany()
                         .HasForeignKey("TweetedId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("comments_ibfk_1"),
-                    l => l.HasOne<Tweet>().WithMany()
+                    l => l.HasOne<Tweet.Tweet>().WithMany()
                         .HasForeignKey("TweetCommentId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("comments_ibfk_2"),
@@ -169,7 +170,7 @@ public partial class TwcloneContext : DbContext
                 .HasConstraintName("tweetsreposts_ibfk_1");
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<User.User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -221,11 +222,11 @@ public partial class TwcloneContext : DbContext
             entity.HasMany(d => d.Followers).WithMany(p => p.Followings)
                 .UsingEntity<Dictionary<string, object>>(
                     "Follower",
-                    r => r.HasOne<User>().WithMany()
+                    r => r.HasOne<User.User>().WithMany()
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("follower_ibfk_1"),
-                    l => l.HasOne<User>().WithMany()
+                    l => l.HasOne<User.User>().WithMany()
                         .HasForeignKey("FollowingId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("follower_ibfk_2"),
@@ -243,11 +244,11 @@ public partial class TwcloneContext : DbContext
             entity.HasMany(d => d.Followings).WithMany(p => p.Followers)
                 .UsingEntity<Dictionary<string, object>>(
                     "Follower",
-                    r => r.HasOne<User>().WithMany()
+                    r => r.HasOne<User.User>().WithMany()
                         .HasForeignKey("FollowingId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("follower_ibfk_2"),
-                    l => l.HasOne<User>().WithMany()
+                    l => l.HasOne<User.User>().WithMany()
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("follower_ibfk_1"),

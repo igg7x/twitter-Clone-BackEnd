@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tw_Clone.Models.TweetLike;
+using Tw_Clone.Models.TweetRepost;
 
-namespace Tw_Clone.Models;
+namespace Tw_Clone.Models.User;
 
 public partial class User
 {
@@ -31,7 +33,7 @@ public partial class User
 
     public sbyte? Banned { get; set; }
 
-    public virtual ICollection<Tweet> Tweets { get; set; } = new List<Tweet>();
+    public virtual ICollection<Tweet.Tweet> Tweets { get; set; } = new List<Tweet.Tweet>();
 
     public virtual ICollection<Tweetslike> Tweetslikes { get; set; } = new List<Tweetslike>();
 

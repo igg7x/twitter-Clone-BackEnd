@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Tw_Clone.Config;
 using Tw_Clone.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,12 +12,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TwcloneContext>(options =>
 {
-    string conn = builder.Configuration.GetConnectionString("DefaultConnection");
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(conn, ServerVersion.AutoDetect(conn));
 });
 
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

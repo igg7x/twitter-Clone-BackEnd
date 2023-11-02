@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tw_Clone.Models;
+
+namespace Tw_Clone.Models.TweetLike;
 
 public partial class Tweetslike
 {
@@ -11,7 +12,7 @@ public partial class Tweetslike
 
     public DateTime FhLike { get; set; }
 
-    public virtual Tweet Tweet { get; set; } = null!;
+    public virtual Tweet.Tweet Tweet { get; set; } = null!;
 
-    public virtual User User { get; set; } = null!;
+    public virtual User.User User { get; set; } = null!;
 }

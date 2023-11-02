@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tw_Clone.Models;
+namespace Tw_Clone.Models.TweetRepost;
 
 public partial class Tweetsrepost
 {
@@ -11,7 +11,7 @@ public partial class Tweetsrepost
 
     public DateTime FhReposts { get; set; }
 
-    public virtual Tweet Tweet { get; set; } = null!;
+    public virtual Tweet.Tweet Tweet { get; set; } = null!;
 
-    public virtual User User { get; set; } = null!;
+    public virtual User.User User { get; set; } = null!;
 }

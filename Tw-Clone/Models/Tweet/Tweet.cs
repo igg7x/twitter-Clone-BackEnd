@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tw_Clone.Models.TweetLike;
+using Tw_Clone.Models.TweetRepost;
 
-namespace Tw_Clone.Models;
+namespace Tw_Clone.Models.Tweet;
 
 public partial class Tweet
 {
@@ -25,7 +27,7 @@ public partial class Tweet
 
     public virtual ICollection<Tweetsrepost> Tweetsreposts { get; set; } = new List<Tweetsrepost>();
 
-    public virtual User User { get; set; } = null!;
+    public virtual User.User User { get; set; } = null!;
 
     public virtual ICollection<Tweet> TweetComments { get; set; } = new List<Tweet>();
 
