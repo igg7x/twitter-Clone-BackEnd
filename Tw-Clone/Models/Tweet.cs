@@ -21,13 +21,13 @@ public partial class Tweet
 
     public DateTime? DeletedAt { get; set; }
 
+    public virtual ICollection<Comment> CommentTweetComments { get; set; } = new List<Comment>();
+
+    public virtual ICollection<Comment> CommentTweeteds { get; set; } = new List<Comment>();
+
     public virtual ICollection<Tweetslike> Tweetslikes { get; set; } = new List<Tweetslike>();
 
     public virtual ICollection<Tweetsrepost> Tweetsreposts { get; set; } = new List<Tweetsrepost>();
 
     public virtual User User { get; set; } = null!;
-
-    public virtual ICollection<Tweet> TweetComments { get; set; } = new List<Tweet>();
-
-    public virtual ICollection<Tweet> Tweeteds { get; set; } = new List<Tweet>();
 }

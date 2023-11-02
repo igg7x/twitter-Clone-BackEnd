@@ -15,6 +15,10 @@ public partial class TwcloneContext : DbContext
     {
     }
 
+    public virtual DbSet<Comment> Comments { get; set; }
+
+    public virtual DbSet<Follower> Followers { get; set; }
+
     public virtual DbSet<Tweet> Tweets { get; set; }
 
     public virtual DbSet<Tweetslike> Tweetslikes { get; set; }
@@ -23,15 +27,70 @@ public partial class TwcloneContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;database=twclone;uid=root;pwd=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.28-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.HasKey(e => new { e.TweetedId, e.TweetCommentId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.ToTable("comments");
+
+            entity.HasIndex(e => e.TweetCommentId, "tweet_comment_id");
+
+            entity.Property(e => e.TweetedId).HasColumnName("tweeted_id");
+            entity.Property(e => e.TweetCommentId).HasColumnName("tweet_comment_id");
+            entity.Property(e => e.Banned)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("banned");
+
+            entity.HasOne(d => d.TweetComment).WithMany(p => p.CommentTweetComments)
+                .HasForeignKey(d => d.TweetCommentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("comments_ibfk_2");
+
+            entity.HasOne(d => d.Tweeted).WithMany(p => p.CommentTweeteds)
+                .HasForeignKey(d => d.TweetedId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("comments_ibfk_1");
+        });
+
+        modelBuilder.Entity<Follower>(entity =>
+        {
+            entity.HasKey(e => new { e.FollowerId, e.FollowingId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.ToTable("follower");
+
+            entity.HasIndex(e => e.FollowingId, "following_id");
+
+            entity.Property(e => e.FollowerId).HasColumnName("follower_id");
+            entity.Property(e => e.FollowingId).HasColumnName("following_id");
+            entity.Property(e => e.FollowedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp")
+                .HasColumnName("followed_at");
+            entity.Property(e => e.UnfollowedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("unfollowed_at");
+
+            entity.HasOne(d => d.FollowerNavigation).WithMany(p => p.FollowerFollowerNavigations)
+                .HasForeignKey(d => d.FollowerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("follower_ibfk_1");
+
+            entity.HasOne(d => d.Following).WithMany(p => p.FollowerFollowings)
+                .HasForeignKey(d => d.FollowingId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("follower_ibfk_2");
+        });
 
         modelBuilder.Entity<Tweet>(entity =>
         {
@@ -67,50 +126,6 @@ public partial class TwcloneContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("tweets_ibfk_1");
-
-            entity.HasMany(d => d.TweetComments).WithMany(p => p.Tweeteds)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Comment",
-                    r => r.HasOne<Tweet>().WithMany()
-                        .HasForeignKey("TweetCommentId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("comments_ibfk_2"),
-                    l => l.HasOne<Tweet>().WithMany()
-                        .HasForeignKey("TweetedId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("comments_ibfk_1"),
-                    j =>
-                    {
-                        j.HasKey("TweetedId", "TweetCommentId")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j.ToTable("comments");
-                        j.HasIndex(new[] { "TweetCommentId" }, "tweet_comment_id");
-                        j.IndexerProperty<int>("TweetedId").HasColumnName("tweeted_id");
-                        j.IndexerProperty<int>("TweetCommentId").HasColumnName("tweet_comment_id");
-                    });
-
-            entity.HasMany(d => d.Tweeteds).WithMany(p => p.TweetComments)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Comment",
-                    r => r.HasOne<Tweet>().WithMany()
-                        .HasForeignKey("TweetedId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("comments_ibfk_1"),
-                    l => l.HasOne<Tweet>().WithMany()
-                        .HasForeignKey("TweetCommentId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("comments_ibfk_2"),
-                    j =>
-                    {
-                        j.HasKey("TweetedId", "TweetCommentId")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j.ToTable("comments");
-                        j.HasIndex(new[] { "TweetCommentId" }, "tweet_comment_id");
-                        j.IndexerProperty<int>("TweetedId").HasColumnName("tweeted_id");
-                        j.IndexerProperty<int>("TweetCommentId").HasColumnName("tweet_comment_id");
-                    });
         });
 
         modelBuilder.Entity<Tweetslike>(entity =>
@@ -217,50 +232,6 @@ public partial class TwcloneContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(15)
                 .HasColumnName("username");
-
-            entity.HasMany(d => d.Followers).WithMany(p => p.Followings)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Follower",
-                    r => r.HasOne<User>().WithMany()
-                        .HasForeignKey("FollowerId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("follower_ibfk_1"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("FollowingId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("follower_ibfk_2"),
-                    j =>
-                    {
-                        j.HasKey("FollowerId", "FollowingId")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j.ToTable("follower");
-                        j.HasIndex(new[] { "FollowingId" }, "following_id");
-                        j.IndexerProperty<int>("FollowerId").HasColumnName("follower_id");
-                        j.IndexerProperty<int>("FollowingId").HasColumnName("following_id");
-                    });
-
-            entity.HasMany(d => d.Followings).WithMany(p => p.Followers)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Follower",
-                    r => r.HasOne<User>().WithMany()
-                        .HasForeignKey("FollowingId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("follower_ibfk_2"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("FollowerId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("follower_ibfk_1"),
-                    j =>
-                    {
-                        j.HasKey("FollowerId", "FollowingId")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j.ToTable("follower");
-                        j.HasIndex(new[] { "FollowingId" }, "following_id");
-                        j.IndexerProperty<int>("FollowerId").HasColumnName("follower_id");
-                        j.IndexerProperty<int>("FollowingId").HasColumnName("following_id");
-                    });
         });
 
         OnModelCreatingPartial(modelBuilder);

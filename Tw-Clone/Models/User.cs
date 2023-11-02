@@ -31,13 +31,13 @@ public partial class User
 
     public sbyte? Banned { get; set; }
 
+    public virtual ICollection<Follower> FollowerFollowerNavigations { get; set; } = new List<Follower>();
+
+    public virtual ICollection<Follower> FollowerFollowings { get; set; } = new List<Follower>();
+
     public virtual ICollection<Tweet> Tweets { get; set; } = new List<Tweet>();
 
     public virtual ICollection<Tweetslike> Tweetslikes { get; set; } = new List<Tweetslike>();
 
     public virtual ICollection<Tweetsrepost> Tweetsreposts { get; set; } = new List<Tweetsrepost>();
-
-    public virtual ICollection<User> Followers { get; set; } = new List<User>();
-
-    public virtual ICollection<User> Followings { get; set; } = new List<User>();
 }
