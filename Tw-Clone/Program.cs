@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TwcloneContext>(options =>
 {
-    string conn = builder.Configuration.GetConnectionString("DefaultConnection");
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(conn, ServerVersion.AutoDetect(conn));
 });
 
