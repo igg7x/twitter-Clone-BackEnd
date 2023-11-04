@@ -6,6 +6,7 @@ namespace Tw_Clone.Repositories
     public interface ITweetRepository : IRepository<Tweet>
     {
         Task<Tweet> Update(Tweet entity);
+
     }
     public class TweetRepository : Repository<Tweet>, ITweetRepository
     {

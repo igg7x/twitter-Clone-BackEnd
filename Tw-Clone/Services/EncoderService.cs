@@ -10,7 +10,6 @@
     {
         public string Encode(string str)
         {
-
             
             string salt = BCrypt.Net.BCrypt.GenerateSalt(13);
             return BCrypt.Net.BCrypt.HashPassword(str, salt);
