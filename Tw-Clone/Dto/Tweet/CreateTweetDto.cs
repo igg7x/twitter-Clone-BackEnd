@@ -6,7 +6,7 @@ namespace Tw_Clone.Dto.Tweet
     {
 
         [Required]
-        public int UsertId { get; set; }
+        public int UserId { get; set; }
         [Required]
         [MaxLength(256)]
         public string TweetText { get; set; } = null!;

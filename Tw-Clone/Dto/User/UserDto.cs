@@ -18,7 +18,7 @@ namespace Tw_Clone.Dto.User
 
         public int? Num_Following { get; set; }
 
-        public List<TweetsDto>? Tweets { get; set; };
+        public List<TweetsDto>? Tweets { get; set; }
 
         public List<Tweetslike> ?Likes { get; set; }
 

@@ -11,7 +11,6 @@ namespace Tw_Clone.Repositories
         Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null);
         Task<T> GetOne(Expression<Func<T, bool>>? filter = null);
         Task Add(T entity);
-        Task Delete(T entity);
         Task Save();
 
     }
@@ -28,29 +27,37 @@ namespace Tw_Clone.Repositories
             dbSet = _db.Set<T>();
         }
 
-        public Task Add(T entity)
+        public async Task Add(T entity)
         {
-            throw new NotImplementedException();
+            await dbSet.AddAsync(entity);
+            await Save();
         }
 
-        public Task Delete(T entity)
+   
+
+        public async  Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.ToListAsync();
         }
 
-        public Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null)
+        public async  Task<T> GetOne(Expression<Func<T, bool>>? filter = null)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.FirstOrDefaultAsync();
         }
 
-        public Task<T> GetOne(Expression<Func<T, bool>>? filter = null)
+        public async  Task Save()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task Save()
-        {
-            throw new NotImplementedException();
+            await _db.SaveChangesAsync();
         }
     }
 }

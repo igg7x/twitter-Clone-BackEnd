@@ -50,5 +50,19 @@ namespace Tw_Clone.Services
             return _mapper.Map<UserDto>(await _userRepo.Update(updated));
         }
 
+
+        public async Task Delete(string username) {
+
+            var user = await _userRepo.GetOne(u => u.Username == username);
+
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            await _userRepo.Delete(user);
+
+        }
+
     }
 }
