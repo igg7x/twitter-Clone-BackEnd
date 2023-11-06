@@ -26,7 +26,7 @@ namespace Tw_Clone.Services
 
         
 
-        public async Task<UserDto> GetById(int id)
+        public async Task<UserDto> GetById(int id)      
         {
             var user = await _userRepo.GetOne(u => u.Id == id);
 
@@ -40,7 +40,7 @@ namespace Tw_Clone.Services
 
         public async Task<UserDto> GetUserByUsername(string? username) {
 
-            var user = await _userRepo.GetOne(u => u.Username == username);
+            var user = await _userRepo.GetOne(u => u.Username == username && u.DeletedAt ==  null);
             
             if (user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             
@@ -78,6 +78,10 @@ namespace Tw_Clone.Services
         
             User user = await _userRepo.GetOne(u => u.Username == username);
             if(user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+
+
+
             var updated = _mapper.Map(updateUserDto, user);
             return _mapper.Map<UserDto>(await _userRepo.Update(updated));
         }

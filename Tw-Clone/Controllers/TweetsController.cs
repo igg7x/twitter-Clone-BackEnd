@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tw_Clone.Dto.Tweet;
+using Tw_Clone.Dto.User;
 using Tw_Clone.Services;
 
 namespace Tw_Clone.Controllers
@@ -37,11 +38,16 @@ namespace Tw_Clone.Controllers
             }
             catch
             {
-                return NotFound(new { message = $"No post with Id = {id}" });
+                return NotFound(new { message = $"No tweet with Id = {id}" });
             }
         }
 
-         [HttpPost]
+
+        
+
+
+
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TweetDto>> Post([FromBody] CreateTweetDto createTweetDto)
@@ -50,16 +56,17 @@ namespace Tw_Clone.Controllers
             {
                 return BadRequest(ModelState);
             }
+            UserDto user; 
             try
             {
-                await _userService.GetById(createTweetDto.UserId);
+                user =  await _userService.GetUserByUsername(createTweetDto.UserName);
             }
             catch
             {
-                ModelState.AddModelError("UserId", "User does not exist");
+                ModelState.AddModelError("UserName", "User does not exist");
                 return BadRequest(ModelState);
             }
-            var postCreated = await _tweetService.Create(createTweetDto);
+            var postCreated = await _tweetService.Create(createTweetDto , user.Id);
             return Created("CreatePost", postCreated);
         }
 

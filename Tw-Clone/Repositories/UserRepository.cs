@@ -27,7 +27,7 @@ namespace Tw_Clone.Repositories
 
         public async Task<User> Update(User entity)
         {
-           _db.Users.Add(entity);
+           _db.Users.Update(entity);
             await Save();
             return entity;
         }

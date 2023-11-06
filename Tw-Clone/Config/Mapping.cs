@@ -9,7 +9,7 @@ namespace Tw_Clone.Config
 
         public Mapping()
         {
-            //CreateMap<User, UsersDto>().ReverseMap();
+            CreateMap<User, UsersDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<CreateUserDto, User>().ReverseMap();
             // no mapear los null en el update
