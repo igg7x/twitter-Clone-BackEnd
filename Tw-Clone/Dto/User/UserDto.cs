@@ -1,6 +1,4 @@
-﻿using Tw_Clone.Dto.Likes;
-using Tw_Clone.Dto.Reposts;
-using Tw_Clone.Dto.Tweet;
+﻿using Tw_Clone.Dto.Tweet;
 using Tw_Clone.Models;
 
 namespace Tw_Clone.Dto.User
@@ -20,9 +18,9 @@ namespace Tw_Clone.Dto.User
 
         public List<TweetsDto>? Tweets { get; set; }
 
-        public List<Tweetslike> ?Likes { get; set; }
+        public List<TweetsDto> ?Likes { get; set; }
 
-        public List<Tweetsrepost>?  Reposts { get; set; }
+        public List<TweetsDto>?  Reposts { get; set; }
 
     }
 }

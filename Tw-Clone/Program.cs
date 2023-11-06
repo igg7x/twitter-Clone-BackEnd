@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Tw_Clone.Config;
 using Tw_Clone.Models;
 using Tw_Clone.Repositories;
 using Tw_Clone.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,7 @@ builder.Services.AddDbContext<TwcloneContext>(options =>
     options.UseMySql(conn, ServerVersion.AutoDetect(conn));
 });
 
-
+builder.Services.AddAutoMapper(typeof(Mapping));
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<ITweetRepository,TweetRepository>();

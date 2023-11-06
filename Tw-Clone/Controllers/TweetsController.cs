@@ -52,7 +52,7 @@ namespace Tw_Clone.Controllers
             }
             try
             {
-                await _userService.GetById(createPostDto.UserId);
+                await _userService.GetById(createTweetDto.UserId);
             }
             catch
             {

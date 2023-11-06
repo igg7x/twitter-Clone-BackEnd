@@ -5,7 +5,7 @@ namespace Tw_Clone.Repositories
     public interface IUserRepository : IRepository<User>
     {
         Task<User> Update(User entity);
-        Task Delete(User entity);   
+        Task Delete(User entity);
     }
     public class UserRepository : Repository<User>, IUserRepository
     {

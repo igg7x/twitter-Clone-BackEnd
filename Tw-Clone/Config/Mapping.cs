@@ -2,13 +2,11 @@
 using Tw_Clone.Dto.Tweet;
 using Tw_Clone.Dto.User;
 using Tw_Clone.Models;
-
 namespace Tw_Clone.Config
 {
     public class Mapping   :Profile
     {
 
-<<<<<<< Updated upstream
         public Mapping()
         {
             //CreateMap<User, UsersDto>().ReverseMap();
@@ -23,29 +21,7 @@ namespace Tw_Clone.Config
             CreateMap<CreateTweetDto, Tweet>().ReverseMap();
             // no mapear los null en el update
             CreateMap<UpdateTweetDto, Tweet>().ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
-=======
-            ////user
-            //CreateMap<User, UsersDto>().ReverseMap();
-            //CreateMap<User, UserDto>().ReverseMap();
-            //CreateMap<CreateUserDto, User>().ReverseMap();
-            //CreateMap<UpdateUserDto, User>().ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
 
-            //// tweet
-            //CreateMap<Tweet, TweetsDto>().ReverseMap();
-            //CreateMap<Tweet, TweetDto>().ReverseMap();
-            //CreateMap<CreateTweetDto, Tweet>().ReverseMap();
-            //CreateMap<UpdateTweetDto, Tweet>().ForAllMembers(opts => opts.Condition((_, _, srcMember) => srcMember != null));
-
-            ////tweet Like
-            //CreateMap<Tweetslike , TweetsLikeDto>().ReverseMap();
-
-            ////tweet Repost
-            //CreateMap<Tweetsrepost, TweetsRepostDto>().ReverseMap();
-
-
-
-
->>>>>>> Stashed changes
         }
 
     }

@@ -16,7 +16,7 @@ namespace Tw_Clone.Controllers
         }
 
 
-        [HttpGet("{username : string}")]
+        [HttpGet("{username}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> Get(string username)
@@ -49,7 +49,7 @@ namespace Tw_Clone.Controllers
 
 
 
-        [HttpPut("{username:string}")]
+        [HttpPut("{username}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -67,7 +67,7 @@ namespace Tw_Clone.Controllers
         }
 
 
-        [HttpDelete("{usename}")]
+        [HttpDelete("{username}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

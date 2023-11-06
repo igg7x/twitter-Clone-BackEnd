@@ -2,7 +2,6 @@
 {
     public class TweetsDto
     {
-
         public int UserId { get; set; }
 
         public DateTime CreatedAt { get; set; }
