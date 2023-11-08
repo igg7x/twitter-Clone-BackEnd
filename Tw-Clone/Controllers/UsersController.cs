@@ -51,6 +51,7 @@ namespace Tw_Clone.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<UserDto>> Post([FromBody] CreateUserDto createUserDto)
         {
@@ -58,6 +59,11 @@ namespace Tw_Clone.Controllers
             {
                 return BadRequest(ModelState);
             }
+            
+            var email = _userService.GetUserByEmail(createUserDto.Email);
+            var username = _userService.GetUserByUsername(createUserDto.Username);
+            if (username != null ||email != null ) return Conflict("This user already exists");
+            
             var userCreated = await _userService.Create(createUserDto);
             return Created("CreateUser", userCreated);
 

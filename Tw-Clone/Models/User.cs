@@ -31,6 +31,8 @@ public partial class User
 
     public sbyte? Banned { get; set; }
 
+    public string? Image { get; set; } = null!; 
+
     public virtual ICollection<Follower> FollowerFollowerNavigations { get; set; } = new List<Follower>();
 
     public virtual ICollection<Follower> FollowerFollowings { get; set; } = new List<Follower>();

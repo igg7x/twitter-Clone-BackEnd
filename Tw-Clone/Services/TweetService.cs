@@ -29,7 +29,17 @@ namespace Tw_Clone.Services
         {
             var lista = await _tweetRepo.GetAll(tw=> tw.DeletedAt == null && db.Users.Any(u=> u.Id == tw.UserId  &&  u.DeletedAt == null));
              // select t.*from tweets t inner join users u  on t.user_id = u.Id where u.deleted_at is null and t.deleted_at is null;
-            return _mapper.Map<List<TweetsDto>>(lista);
+            var  tweetsList =  _mapper.Map<List<TweetsDto>>(lista);
+            foreach (var tw in tweetsList)
+            {
+                var user = db.Users.Where(u => u.Id == tw.UserId).FirstOrDefault()!;
+
+                tw.UserName = user.Username;
+                tw.Image = user.Image; 
+                tw.FirstName = user.FirstName;
+                tw.LastName = user.LastName;
+            }
+            return tweetsList;
         }
 
 
@@ -37,26 +47,49 @@ namespace Tw_Clone.Services
         public async Task<List<TweetsDto>> GetAllByUserName(int userId)
         {
             var lista = await _tweetRepo.GetAll(tw => tw.UserId == userId);
-            return _mapper.Map<List<TweetsDto>>(lista);
+            var tweetsList  =  _mapper.Map<List<TweetsDto>>(lista);
+
+            foreach (var tw in tweetsList)
+            {
+                var user = db.Users.Where(u => u.Id == tw.UserId).FirstOrDefault()!;
+
+                tw.UserName = user.Username;
+                tw.Image = user.Image;
+                tw.FirstName = user.FirstName;
+                tw.LastName = user.LastName;
+            }
+            return tweetsList;
         }
 
 
         public async Task<TweetDto> GetById(int id)
         {
-            var tw = await _tweetRepo.GetOne(tw => tw.Id == id);
+            var tw = await _tweetRepo.GetOne(tw => tw.Id == id  && tw.DeletedAt == null);
 
             if (tw == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var user =   db.Users.Where(u => u.Id == tw.UserId).FirstOrDefault<User>()! ;
+            var user =   db.Users.Where(u => u.Id == tw.UserId && u.DeletedAt == null).FirstOrDefault<User>()! ;
+            
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             var tweet =   _mapper.Map<TweetDto>(tw);
 
             tweet.UserName = user.Username;
 
             tweet.Comments = await  GetCommentsByTweetId(tw.Id);
+
+
+            tweet.FirstName = user.FirstName;
+
+            tweet.LastName = user.LastName;
+
+            tweet.Image = user.Image; 
 
             return tweet; 
         }
@@ -78,9 +111,20 @@ namespace Tw_Clone.Services
 
         private async Task<List<TweetsDto>> GetCommentsByTweetId(int id)
         {
-            var comments = await _tweetRepo.GetAll(t => db.Comments.Any(c => c.TweetedId == id && c.TweetCommentId == t.Id));
+            var comments = await _tweetRepo.GetAll(t => db.Comments.Any(c => c.TweetedId == id && c.TweetCommentId == t.Id) && t.DeletedAt == null);
             //  select t.* from comments c inner join tweets t on t.id = c.tweet_comment_id where c.tweeted_id = 4   
-            return _mapper.Map<List<TweetsDto>>(comments);
+           var tweetsList =  _mapper.Map<List<TweetsDto>>(comments);
+
+            foreach (var tw in tweetsList)
+            {
+                var user = db.Users.Where(u => u.Id == tw.UserId).FirstOrDefault()!;
+
+                tw.UserName = user.Username;
+                tw.Image = user.Image;
+                tw.FirstName = user.FirstName;
+                tw.LastName = user.LastName;
+            }
+            return tweetsList;
         }
 
         public async Task<TweetDto> Create(CreateTweetDto createTweetDto ,int userId)
@@ -111,14 +155,36 @@ namespace Tw_Clone.Services
         public   async Task<List<TweetsDto>> GetAllRepostsByUserName(int id)
         {
            var reposts  = await _tweetRepo.GetAll(t => db.Tweetslikes.Any(tl => tl.UserId == id && tl.TweetId == t.Id));
-            return _mapper.Map<List<TweetsDto>>(reposts);
+           var tweetsList =  _mapper.Map<List<TweetsDto>>(reposts);
+
+            foreach (var tw in tweetsList)
+            {
+                var user = db.Users.Where(u => u.Id == tw.UserId).FirstOrDefault()!;
+
+                tw.UserName = user.Username;
+                tw.Image = user.Image;
+                tw.FirstName = user.FirstName;
+                tw.LastName = user.LastName;
+            }
+            return tweetsList;
         }
 
 
         public  async Task<List<TweetsDto>> GetAllLikesByUserName(int  id)
         {
             var likes = await _tweetRepo.GetAll(t => db.Tweetsreposts.Any(tl => tl.UserId == id && tl.TweetId == t.Id));
-            return _mapper.Map<List<TweetsDto>>(likes);
+            var tweetsList =  _mapper.Map<List<TweetsDto>>(likes);
+
+            foreach (var tw in tweetsList)
+            {
+                var user = db.Users.Where(u => u.Id == tw.UserId).FirstOrDefault()!;
+
+                tw.UserName = user.Username;
+                tw.Image = user.Image;
+                tw.FirstName = user.FirstName;
+                tw.LastName = user.LastName;
+            }
+            return tweetsList;
         }
 
         public async Task DeleteById(int id)
@@ -172,13 +238,7 @@ namespace Tw_Clone.Services
         }
         public async  Task CreateComment(int tweetedId, TweetDto tweet , int tweetcommentid)
         {
-            
-          
-            
             var commentCreated = _mapper.Map<Comment>(tweet);
-
-
-
             commentCreated.TweetedId = tweetedId;
             commentCreated.TweetCommentId = tweetcommentid;
             db.Comments.Add(commentCreated);
