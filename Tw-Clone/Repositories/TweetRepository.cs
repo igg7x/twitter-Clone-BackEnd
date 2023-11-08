@@ -7,6 +7,7 @@ namespace Tw_Clone.Repositories
     {
         Task<Tweet> Update(Tweet entity);
 
+        Task Delete(Tweet entity);
     }
     public class TweetRepository : Repository<Tweet>, ITweetRepository
     {
@@ -16,6 +17,12 @@ namespace Tw_Clone.Repositories
         public TweetRepository(TwcloneContext db) : base(db)
         {
             _db = db;
+        }
+
+        public  async  Task  Delete(Tweet entity)
+        {
+             entity.DeletedAt = DateTime.Now;
+            await _db.SaveChangesAsync();
         }
 
         public async Task<Tweet> Update(Tweet entity)

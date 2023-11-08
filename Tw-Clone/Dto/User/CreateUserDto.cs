@@ -10,7 +10,6 @@ namespace Tw_Clone.Dto.User
         public string Username { get; set; } = null!;
         [Required]
         [MaxLength(40)]
-
         public string FirstName { get; set; } = null!;
         [Required]
         [MaxLength(40)]
@@ -23,7 +22,6 @@ namespace Tw_Clone.Dto.User
         public string? Biography { get; set; }
         [Required]
         [MinLength(8)]
-
         public string Password { get; set; } = null!;
 
         public DateTime? FhNac { get; set; }

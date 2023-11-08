@@ -3,7 +3,7 @@ using System.Web.Http;
 using Tw_Clone.Dto.User;
 using Tw_Clone.Models;
 using Tw_Clone.Repositories;
-using AutoMapper; 
+using AutoMapper;
 
 namespace Tw_Clone.Services
 {
@@ -24,13 +24,58 @@ namespace Tw_Clone.Services
         }
 
 
-        public async Task<User> GetUserByUsername(string? username) {
+        
 
-            User user = await _userRepo.GetOne(u => u.Username == username);
-            if (user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            return user;
+        public async Task<UserDto> GetById(int id)      
+        {
+            var user = await _userRepo.GetOne(u => u.Id == id);
+
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return _mapper.Map<UserDto>(user);
         }
 
+        public async Task<UserDto> GetUserByUsername(string? username) {
+
+            var user = await _userRepo.GetOne(u => u.Username == username && u.DeletedAt ==  null);
+            
+            if (user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return  await GetTweetsLikesAndRepostsByUser(user);
+        }
+
+        private async Task<UserDto>  GetTweetsLikesAndRepostsByUser( User user ) {
+
+            var tweets = await _tweetService.GetAllByUserName(user.Id);
+
+            var likes = await _tweetService.GetAllLikesByUserName(user.Id);
+
+
+            var reposts = await _tweetService.GetAllRepostsByUserName(user.Id);
+
+            var mapped = _mapper.Map<UserDto>(user);
+
+            mapped.Tweets = tweets;
+
+            mapped.Likes = likes;
+
+            mapped.Reposts = reposts;
+
+            return mapped;
+        }
+
+        public async Task<VerifyUserDto> GetUserByEmail(string ? email) {
+
+            var user = await _userRepo.GetOne(u => u.Email == email && u.DeletedAt == null);
+
+            if (user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return _mapper.Map<VerifyUserDto>(user);
+        }
+       
 
         public async Task<UserDto> Create(CreateUserDto userToCreate) {
 
@@ -48,6 +93,19 @@ namespace Tw_Clone.Services
             if(user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             var updated = _mapper.Map(updateUserDto, user);
             return _mapper.Map<UserDto>(await _userRepo.Update(updated));
+        }
+
+
+        public async Task Delete(string username) {
+
+            var user = await _userRepo.GetOne(u => u.Username == username);
+
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            await _userRepo.Delete(user);
+
         }
 
     }
