@@ -16,7 +16,7 @@ namespace Tw_Clone.Controllers
         }
 
 
-        [HttpGet("{username}")]
+        [HttpGet("username/{username}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> Get(string username)
@@ -28,6 +28,22 @@ namespace Tw_Clone.Controllers
             catch
             {
                 return NotFound(new { message = $"No user with UserName = {username}" });
+            }
+        }
+
+
+        [HttpGet("email/{email}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<VerifyUserDto>> GetUser(string email)
+        {
+            try
+            {
+                return Ok(await _userService.GetUserByEmail(email));
+            }
+            catch
+            {
+                return NotFound(new { message = $"No user with Email = {email}" });
             }
         }
 

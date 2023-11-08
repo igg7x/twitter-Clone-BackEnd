@@ -3,7 +3,10 @@
     public class TweetsDto
     {
         public int UserId { get; set; }
-
+        // USERName
+        // IMAGE 
+        // firstname 
+        // lastname
         public DateTime CreatedAt { get; set; }
 
         public string TweetText { get; set; } = null!;

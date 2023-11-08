@@ -43,25 +43,38 @@ namespace Tw_Clone.Services
             var user = await _userRepo.GetOne(u => u.Username == username && u.DeletedAt ==  null);
             
             if (user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            
+
+            return  await GetTweetsLikesAndRepostsByUser(user);
+        }
+
+        private async Task<UserDto>  GetTweetsLikesAndRepostsByUser( User user ) {
+
             var tweets = await _tweetService.GetAllByUserName(user.Id);
 
-            var likes = await  _tweetService.GetAllLikesByUserName(user.Id);
+            var likes = await _tweetService.GetAllLikesByUserName(user.Id);
 
 
-            var reposts = await  _tweetService.GetAllRepostsByUserName(user.Id);
+            var reposts = await _tweetService.GetAllRepostsByUserName(user.Id);
 
             var mapped = _mapper.Map<UserDto>(user);
 
             mapped.Tweets = tweets;
 
-            mapped.Likes = likes; 
+            mapped.Likes = likes;
 
-            mapped.Reposts= reposts;
+            mapped.Reposts = reposts;
 
             return mapped;
         }
 
+        public async Task<VerifyUserDto> GetUserByEmail(string ? email) {
+
+            var user = await _userRepo.GetOne(u => u.Email == email && u.DeletedAt == null);
+
+            if (user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return _mapper.Map<VerifyUserDto>(user);
+        }
        
 
         public async Task<UserDto> Create(CreateUserDto userToCreate) {
@@ -78,10 +91,6 @@ namespace Tw_Clone.Services
         
             User user = await _userRepo.GetOne(u => u.Username == username);
             if(user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-
-
-
             var updated = _mapper.Map(updateUserDto, user);
             return _mapper.Map<UserDto>(await _userRepo.Update(updated));
         }
@@ -95,7 +104,6 @@ namespace Tw_Clone.Services
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
             await _userRepo.Delete(user);
 
         }

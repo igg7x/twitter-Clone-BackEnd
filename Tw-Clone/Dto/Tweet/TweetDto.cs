@@ -20,8 +20,8 @@ namespace Tw_Clone.Dto.Tweet
 
         public List<TweetsDto>? Comments  { get; set; }
 
-        public List<UsersDto>? Likes { get; set;  }
-        public List<UsersDto>? Reposts { get; set; }
+        //public List<UsersDto>? Likes { get; set;  }
+        //public List<UsersDto>? Reposts { get; set; }
 
 
     }
