@@ -80,7 +80,7 @@ namespace Tw_Clone.Services
         public async Task<UserDto> Create(CreateUserDto userToCreate) {
 
             User user = _mapper.Map<User>(userToCreate);
-            user.Password = _encoderService.Encode(userToCreate.Password);
+            //user.Password = _encoderService.Encode(userToCreate.Password);
             await _userRepo.Add(user);
             return _mapper.Map<UserDto>(user);
 

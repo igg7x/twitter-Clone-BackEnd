@@ -7,6 +7,14 @@
         // IMAGE 
         // firstname 
         // lastname
+
+        public string UserName { get; set; } = null!;
+
+        public string FirstName { get; set; } = null!;
+
+        public string LastName { get; set; } = null!;
+
+        public string Image { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
 
         public string TweetText { get; set; } = null!;

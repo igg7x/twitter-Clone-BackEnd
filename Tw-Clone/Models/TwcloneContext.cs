@@ -27,7 +27,6 @@ public partial class TwcloneContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -217,6 +216,9 @@ public partial class TwcloneContext : DbContext
             entity.Property(e => e.FirstName)
                 .HasMaxLength(40)
                 .HasColumnName("first_name");
+            entity.Property(e => e.Image)
+                .HasMaxLength(128)
+                .HasColumnName("image");
             entity.Property(e => e.LastName)
                 .HasMaxLength(40)
                 .HasColumnName("last_name");
