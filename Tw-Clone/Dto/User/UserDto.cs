@@ -9,6 +9,10 @@ namespace Tw_Clone.Dto.User
        
         public string Username { get; set; } = null!;
 
+        public string FirstName { get; set; } = null!;
+
+        public string LastName { get; set; } = null!;
+
         public DateTime? FhNac { get; set; }
 
         public string? Biography { get; set; }
