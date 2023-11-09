@@ -21,7 +21,7 @@ public partial class User
 
     public DateTime? FhNac { get; set; }
 
-    public string Password { get; set; } = null!;
+    public string? Password { get; set; }
 
     public int? NumFollowers { get; set; }
 
@@ -31,7 +31,7 @@ public partial class User
 
     public sbyte? Banned { get; set; }
 
-    public string? Image { get; set; } = null!; 
+    public string? Image { get; set; }
 
     public virtual ICollection<Follower> FollowerFollowerNavigations { get; set; } = new List<Follower>();
 
