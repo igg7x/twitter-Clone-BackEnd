@@ -51,7 +51,7 @@ namespace Tw_Clone.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TweetDto>> Post([FromBody] CreateTweetDto createTweetDto)
         {
             if (!ModelState.IsValid)
@@ -74,7 +74,7 @@ namespace Tw_Clone.Controllers
 
         [HttpPost("comment/{tweetid:int}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TweetDto>> PostComment(int tweetid ,  [FromBody] CreateTweetDto createTweetDto)
         {
             if (!ModelState.IsValid)
@@ -114,7 +114,7 @@ namespace Tw_Clone.Controllers
 
         [HttpPost("like")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> PostLike([FromBody] CreateTweetLikeDto dto)
         {
             if (!ModelState.IsValid)

@@ -5,10 +5,6 @@
 
         public int Id { get; set;}
         public int UserId { get; set; }
-        // USERName
-        // IMAGE 
-        // firstname 
-        // lastname
 
         public string UserName { get; set; } = null!;
 

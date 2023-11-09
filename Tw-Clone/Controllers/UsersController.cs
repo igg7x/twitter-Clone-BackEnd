@@ -60,10 +60,6 @@ namespace Tw_Clone.Controllers
                 return BadRequest(ModelState);
             }
             
-            //var email = _userService.GetUserByEmail(createUserDto.Email);
-            //var username = _userService.GetUserByUsername(createUserDto.Username);
-            //if (username != null ||email != null ) return Conflict("This user already exists");
-            
             var userCreated = await _userService.Create(createUserDto);
             return Created("CreateUser", userCreated);
 

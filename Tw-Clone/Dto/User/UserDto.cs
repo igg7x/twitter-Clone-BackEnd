@@ -13,7 +13,7 @@ namespace Tw_Clone.Dto.User
 
         public string LastName { get; set; } = null!;
 
-        public DateTime? FhNac { get; set; }
+        public string Image { get; set; } = null!; 
 
         public string? Biography { get; set; }
         public int? Num_Followers { get; set; }

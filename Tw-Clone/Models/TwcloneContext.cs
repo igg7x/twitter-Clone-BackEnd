@@ -27,10 +27,6 @@ public partial class TwcloneContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseMySql("server=localhost;database=twclone;uid=root;pwd=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.28-mysql"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -221,7 +217,7 @@ public partial class TwcloneContext : DbContext
                 .HasMaxLength(40)
                 .HasColumnName("first_name");
             entity.Property(e => e.Image)
-                .HasMaxLength(128)
+                .HasMaxLength(1024)
                 .HasColumnName("image");
             entity.Property(e => e.LastName)
                 .HasMaxLength(40)
@@ -236,7 +232,7 @@ public partial class TwcloneContext : DbContext
                 .HasMaxLength(128)
                 .HasColumnName("password");
             entity.Property(e => e.Username)
-                .HasMaxLength(15)
+                .HasMaxLength(128)
                 .HasColumnName("username");
         });
 
